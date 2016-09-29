@@ -1,6 +1,8 @@
-function test() {
-    ver a = 1;
-    return a + 1;
+var btn = document.getElementById('btn');
+btn.onclick = function() {
+    try {
+        ver aaa;
+    } catch(e) {
+        ZLogger.log(e);
+    }
 }
-
-test();

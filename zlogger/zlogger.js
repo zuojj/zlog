@@ -2,12 +2,41 @@
  *
  * @authors Benjamin (zuojj.com@gmail.com)
  * @date    2016-09-28 16:01:56
- * @description 旧版的浏览器这个接口只支持三个参数，新版的支持5个
+ * @description onerror旧版的浏览器这个接口只支持三个参数，新版的支持5个
+ * @add
+ * ```
+ * <!--[if lte IE 6]>
+ * <script type="text/javascript">
+ *     window.onerror=function(){return true;}
+ * </script>
+ * <![endif]-->
+ * ```
+ *
  * @example
+ * // eg1: image or script load error
  * ```
  * <img src="./aa.png" onerror="ZLogger.log(event)" />
  * <script src="./test.js" onerror="ZLogger.log(event)"></script>
+ * ```
+ *
+ * // eg2: window.onerror
  * window.onerror 文件引入及绑定
+ *
+ * // eg3: callback inner
+ * ```
+ * var btn = document.getElementById('#btn_submit')
+ * btn.onclick = function() {
+ *     try {
+ *         // todo
+ *     } catch(e) {
+ *         ZLogger.log(e);
+ *     }
+ * }
+ * ```
+ *
+ * // eg4: different domain and script inner error
+ * ```
+ * <script src="./test.js" crossorigin></script>
  * ```
  */
 
@@ -35,20 +64,11 @@
         return msg.join(',');
     };
 
-    function print(msg, url, line, column, error) {
-        var result = document.getElementById('result');
-
-        result.innerHTML += "Error: " + msg + "<br />"
-        result.innerHTML += "Error: " + url + "<br />"
-        result.innerHTML += "Error: " + line + "<br />"
-        result.innerHTML += "Error: " + column + "<br />"
-        result.innerHTML += "Error: " + error + "<br />"
-    }
-
     zlogger = window['ZLogger'] = window['ZLogger'] || {};
 
+    zlogger.version = '0.0.1';
     zlogger.options = {
-        url: 'https://www.sogou.com/a.gif?'
+        url: 'http://www.xxxx.com/a.gif?'
     };
 
     /**
@@ -64,7 +84,7 @@
         var info = {},
             str = '',
             params = [];
-print(msg, url, line, column, error);
+
         // element.onerror = function(event) {}
         error = error || msg;
 
@@ -78,7 +98,7 @@ print(msg, url, line, column, error);
         for(var key in info) {
             params.push(key + '=' + window.encodeURIComponent(info[key]));
         }
-print(params.join('\n'));
+
         zlogger.reporter(zlogger.options.url + params.join('&'));
     };
 
