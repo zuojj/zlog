@@ -69,11 +69,19 @@ window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error
 * 地域信息：后台程序可以根据请求头来获得ip
 * 浏览器信息： 后台程序可以根据请求头来获取浏览器信息
 
-## 移动端无埋点解决方案
+## 测试用例
+* try catch
+* throw new Error('@!!');
+* script error
+* img onerror
+* script onerror
+* block script error
 
 
 
 ## 参考链接
+* [GlobalEventHandlers.onerror](https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onerror)
+* [Error.prototype.stack](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/stack)
 * [Google Analytics数据统计的原理](http://www.biaodianfu.com/google-analytics-architecture.html)
 * [网站数据统计分析之一：日志收集原理及其实现](https://my.oschina.net/leejun2005/blog/292709)
 * [GrowingIO 如何做到不必埋点即可采集到齐全的用户行为点击流数据?](https://www.zhihu.com/question/38000812)
@@ -82,5 +90,7 @@ window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error
 * [前端代码异常监控](http://div.io/topic/743)
 * [JavaScript Error tracking in browsers](https://herringtondarkholme.github.io/2015/11/17/js-tracker/)
 * [JS stacktraces. The good, the bad, and the ugly.](http://blog.bugsnag.com/js-stacktraces)
+* [Browser compatibility](https://blog.sentry.io/2016/01/04/client-javascript-reporting-window-onerror.html)
+* [stacktrace.js](https://www.stacktracejs.com/)
 
 

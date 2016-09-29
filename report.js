@@ -31,7 +31,7 @@
             str = '';
 
         if(msg != 'Script error' && !url) {
-            return true;
+            return;
         }
 
         var getStack = function(depth) {
@@ -62,13 +62,15 @@
             return _msg.join("==");
         };
 
+        // element.onerror = function(event) {}
         error = error || msg;
 
+        // Error.prototype
         info.m = (error.message || error.description || msg).toString();
         info.s = (error.stack || error.backtrace || error.stacktrace || getStack(3) || '').toString();
         info.f = (url || error.fileName || error.sourceURL || (error.target || '').src).toString();
-        info.l = (line || line.lineNumber || error.line).toString();
-        info.c = column || (window.event && window.event.errorCharacter) || 0;
+        info.l = (line || error.lineNumber || error.line || 0).toString();
+        info.c = column || error.columnNumber || (window.event && window.event.errorCharacter) || 0;
 
         var params = [];
         for(var key in info) {
