@@ -11,9 +11,13 @@
 <script type="text/javascript"></script>
 </head>
 <body>
+
+<div id="result">
+
+</div>
 <input type="button" id="btn" value="clickme">
-<script type="text/javascript" src="../report.js"></script>
-<img src="./aaafdas.png" id="aa">
-<script type="text/javascript" src="http://wap.sogou.com/test.js"></script>
+<script type="text/javascript" src="../zlogger.js"></script>
+<img src="./aaafdas.png" id="aa" onerror="ZLogger.log(event)">
+<script type="text/javascript" src="http://wap.sogou.com/test.js" onerror="ZLogger.log(event)"></script>
 </body>
 </html>
