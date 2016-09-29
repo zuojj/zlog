@@ -1,8 +1,8 @@
 /**
- *
  * @authors Benjamin (zuojj.com@gmail.com)
  * @date    2016-09-28 16:01:56
- * @description onerror旧版的浏览器这个接口只支持三个参数，新版的支持5个
+ * @description onerror arguments table:
+ * https://blog.sentry.io/2016/01/04/client-javascript-reporting-window-onerror.html
  * @add
  * ```
  * <!--[if lte IE 6]>
