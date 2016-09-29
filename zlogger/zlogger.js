@@ -8,7 +8,7 @@
  * <!--[if lte IE 6]>
  * <script type="text/javascript">
  *     window.onerror=function(){return true;}
- * </script>
+ * <\/script>
  * <![endif]-->
  * ```
  *
@@ -16,7 +16,7 @@
  * // eg1: image or script load error
  * ```
  * <img src="./aa.png" onerror="ZLogger.log(event)" />
- * <script src="./test.js" onerror="ZLogger.log(event)"></script>
+ * <script src="./test.js" onerror="ZLogger.log(event)"><\/script>
  * ```
  *
  * // eg2: window.onerror
@@ -36,7 +36,7 @@
  *
  * // eg4: different domain and script inner error
  * ```
- * <script src="./test.js" crossorigin></script>
+ * <script src="./test.js" crossorigin><\/script>
  * ```
  */
 
