@@ -180,6 +180,4 @@
         };
         img.src = src;
     };
-
-    window.onerror = zlogger.error;
 })(window);
