@@ -1,9 +1,9 @@
-# ZLOGGER
+# ZLogger
 
 ## REFERENCE
 ```js
 <head>
-    <script src="zlogger.js"></script>
+    <script src="ZLogger.js"></script>
 </head>
 ```
 
@@ -16,9 +16,9 @@ window.onerror = ZLogger.error;
 
 ### img.onerror / script.onerror
 ```html
-<img src="error.png" onerror="Zlogger.error(event)">
+<img src="error.png" onerror="ZLogger.error(event)">
 or
-imgObj.addEventListener('error', Zlogger.error, false);
+imgObj.addEventListener('error', ZLogger.error, false);
 imgObj.attachEvent('onerror', ZLogger.error);
 ```
 
@@ -35,7 +35,7 @@ ZLogger.send('http://aa.xx.com/pv.gif?name=benjamin', {
 
 ### directly use reporter
 ```js
-Zlogger.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
+ZLogger.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
     console.log(url);
 });
 ```
