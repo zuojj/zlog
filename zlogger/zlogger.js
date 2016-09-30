@@ -143,9 +143,22 @@
                 params.push(key + '=' + window.encodeURIComponent(errorInfo[key]));
             }
         }
-        params.push('rand=' + (+new Date()) + '-r-' + Math.floor(Math.random() * 1000));
+        params.push('rand=' + (+new Date()) + '.r' + Math.floor(Math.random() * 1000));
 
+        /**
+         * http://www.sogou.com/pv.gif
+         * => http://www.sogou.com/pv.gif?
+         */
         url = url.indexOf('?') > 0 ? url : (url + '?');
+
+        /**
+         * http://www.sogou.com/pv.gif?name=zhansan
+         * => http://www.sogou.com/pv.gif?name=zhansan&
+         * http://www.sogou.com/pv.gif?name=zhansan&sex=male
+         * => http://www.sogou.com/pv.gif?name=zhansan&sex=male&
+         */
+        url = /\?.+[^&]$/.test(url) ? (url + '&') : url;
+
         params.length && rand_reporter(sampling || 1) && zlogger.reporter(url + params.join('&'));
     };
 
