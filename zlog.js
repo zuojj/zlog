@@ -1,171 +1,183 @@
 /**
- *
  * @authors Benjamin (zuojj.com@gmail.com)
- * @date    2016-09-27 12:21:38
- * @version $Id$
+ * @date    2016-09-28 16:01:56
+ * @description onerror arguments table:
+ * https://blog.sentry.io/2016/01/04/client-javascript-reporting-window-onerror.html
+ * @add
+ * ```
+ * <!--[if lte IE 6]>
+ * <script type="text/javascript">
+ *     window.onerror=function(){return true;}
+ * <\/script>
+ * <![endif]-->
+ * ```
+ *
+ * @example
+ * eg1: image or script load error
+ * ```
+ * <img src="./aa.png" onerror="ZLog.error(event)" />
+ * <script src="./test.js" onerror="ZLog.error(event)"><\/script>
+ * ```
+ *
+ * eg2: window.onerror
+ * ```
+ * window.onerror = ZLog.error;
+ * ```
+ *
+ * eg3: callback inner
+ * ```
+ * var btn = document.getElementById('#btn_submit')
+ * btn.onclick = function() {
+ *     try {
+ *         // todo
+ *     } catch(e) {
+ *         ZLog.error(e);
+ *     }
+ * }
+ * ```
+ *
+ * eg4: different domain and script inner error
+ * ```
+ * <script src="./test.js" crossorigin><\/script>
+ *
+ * // server
+ * header('Access-Control-Allow-Origin: *');
+ * ```
+ *
+ * eg5: url have no params
+ * ZLog.send('https://www.sogou.com/pv.gif, {
+ *     type: 'WARN',
+ *     msg: 'VALID_IS_NOT_DEFINED'
+ * })
+ *
+ * eg6:
+ * ZLog.send({
+ *     type: 'WARN',
+ *     msg: 'VALID_IS_NOT_DEFINED'
+ * }, 0.5)
+ *
+ * eg7:
+ * ZLog.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
+ *     console.log(url);
+ * });
  */
 
 (function(window, undefined) {
-    var sg = {},
-        screen = window.screen,
-        nav = window.navigator,
-        localStorage = window.localStorage,
-        sessionStorage = window.sessionStorage,
-        ua = nav.userAgent,
-        hostname = window.location.hostname,
-        t = !0,
-        f = !1,
-        n = null,
-        u = void 0,
-        arr = ['base', 'json', 'localStorage', 'sessionStorage', 'cookie', 'dom'];
+    var zlog;
 
-    sg.base = {
-        cookieEnabled: nav.cookieEnabled,
-        javaEnabled: nav.javaEnabled(),
-        colorDepth: screen.colorDepth || 0,
+    /**
+     * [getStack 读取堆栈信息, 默认3层]
+     * @param  {Number} depth [堆栈深度]
+     * @return {String}       []
+     */
+    function getStack(depth) {
+        var fun,msg = [];
+
+        fun = arguments.callee.caller;
+        while(fun && (--depth) > 0) {
+            msg.push(fun.toString());
+            try {
+                fun = fun.caller;
+            } catch (e) {
+                break;
+            }
+        }
+
+        return msg.join(',');
     };
 
-    for(var i = 0, ilen = arr.length; i < ilen; i++) {
-        sg[arr[i]] = sg[arr[i]] || {};
-    }
+    zlog = window['ZLog'] = window['ZLog'] || {};
 
-    sg.json.parse = function() {};
-    sg.json.stringify = function() {};
+    zlog.version = '0.0.2';
+    zlog.options = {
+        url: 'http://www.sogou.com/a.gif'
+    };
 
-    sg.localStorage.A = function() {
-        if(!sg.localStorage.f) {
-            try {
-                var input = sg.localStorage.f = document.createElement('input');
-                input.type = 'hidden';
-                input.style.display = 'none';
-                input.addBehavior('#default#userData');
-                document.getElementsByTagName('head')[0].appendChild(input);
-            }catch(e) {
-                return f;
+    /**
+     * [error 日志, 适应window.onerror, img.onerror, script.onerror]
+     * @param  {String} msg    [错误信息]
+     * @param  {String} url    [出现错误URL]
+     * @param  {String} line   [行号]
+     * @param  {String} column [列号]
+     * @param  {Object} error  [错误详细信息]
+     * @return {Undefined}     [description]
+     */
+    zlog.error = function(msg, url, line, column, error) {
+        var info = {};
+
+        // element.onerror = function(event) {}
+        error = error || msg;
+
+        // Error.prototype
+        info.m = (error.message || error.description || msg).toString();
+        info.s = (error.stack || getStack(3) || '').toString();
+        info.f = (url || error.fileName || (error.target || '').src || '').toString();
+        info.l = (line || error.lineNumber || 0).toString();
+        info.c = column || error.columnNumber || (window.event && window.event.errorCharacter) || 0;
+
+        zlog.send(info);
+    };
+
+    /**
+     * [send 发送错误信息]
+     * @param  {String} url       [请求URL，不带参数]
+     * @param  {Object} errorInfo [error Object]
+     * @param  {Number} sampling  [采样概率]
+     * @return {[type]}           [description]
+     */
+    zlog.send = function(url, errorInfo, sampling) {
+        var params = [],
+            rand_reporter = function(rand) {
+                return Math.random() <= rand;
+            };
+
+        if('object' === typeof url) {
+            sampling = errorInfo;
+            errorInfo = url;
+            url = zlog.options.url;
+        }
+
+        errorInfo = 'object' === typeof errorInfo ? errorInfo : {};
+        for(var key in errorInfo) {
+            if(errorInfo.hasOwnProperty(key)) {
+                params.push(key + '=' + window.encodeURIComponent(errorInfo[key]));
             }
         }
-        return t;
-    }
-    sg.localStorage.set = function(key, value, e) {
-        try {
-            if(localStorage) {
-                localStorage.setItem(key, value);
-            }else {
-                if(sg.localStorage.A()) {
-                    sg.localStorage.f.expires = date.toUTCString();
-                    sg.localStorage.f.load(hostname);
-                    sg.localStorage.f.setAttribute(key, value);
-                    sg.localStorage.f.save(hostname);
-                }
-            }
-        } catch(g) {};
-    }
+        params.push('rand=' + (+new Date()) + '.r' + Math.floor(Math.random() * 1000));
 
-    sg.localStorage.get = function(key) {
-        var value ;
-        if(localStorage) {
-            value = localStorage.getItem(key);
-        }else {
-            if(sg.localStorage.A()) {
-                sg.localStorage.f.load(hostname);
-                value = sg.localStorage.f.getAttribute(key);
-                sg.localStorage.f.save(hostname);
-            }
-        }
+        /**
+         * http://www.sogou.com/pv.gif
+         * => http://www.sogou.com/pv.gif?
+         */
+        url = url.indexOf('?') > 0 ? url : (url + '?');
 
-        return value || n;
-    }
+        /**
+         * http://www.sogou.com/pv.gif?name=zhansan
+         * => http://www.sogou.com/pv.gif?name=zhansan&
+         * http://www.sogou.com/pv.gif?name=zhansan&sex=male
+         * => http://www.sogou.com/pv.gif?name=zhansan&sex=male&
+         */
+        url = /\?.+[^&]$/.test(url) ? (url + '&') : url;
 
-    sg.localStorage.remove = function() {
-        if(localStorage) {
-            localStorage.removeItem(key);
-        }else {
-            if(sg.localStorage.A()) {
-                sg.localStorage.f.load(hostname);
-                sg.localStorage.f.removeAttribute(key);
-                sg.localStorage.f.save(hostname);
-            }
-        }
-    }
+        params.length && rand_reporter(sampling || 1) && zlog.reporter(url + params.join('&'));
+    };
 
-    sg.sessionStorage.set = function(key, value) {
-        !!sessionStorage && sessionStorage.setItem(key, value);
-    }
+    /**
+     * [reporter 上报接口]
+     * @param  {String}   src      [上报URL]
+     * @param  {Function} callback [上报回调]
+     * @return {[type]}            [description]
+     */
+    zlog.reporter = function(src, callback) {
+        var d = "memory_log_" + Math.floor(1024 * 1024 * 1024 * Math.random()).toString(36),
+            img = window[d] = new Image();
 
-    sg.sessionStorage.get = function(key) {
-        return !!sessionStorage ? sessionStorage.get(key) : n;
-    }
-
-    sg.sessionStorage.remove = function(key) {
-        !!sessionStorage && sessionStorage.removeItem(key);
-    }
-
-    sg.cookie.set = function(key, value, options) {
-        var d = new Date();
-        document.cookie = key + '=' + value +
-        (options.domain ? ';domain=' + options.domain : '') +
-        (options.path ? ';path=' + options.path : '') +
-        (d ? ';expires=' + d.toGMTString() : '') +
-        (options.secure ? ';secure': '');
-    }
-
-    sg.cookie.get = function(key) {
-        return (key = RegExp("(^| )" + key + "=([^;]*)(;|$)").exec(document.cookie)) ? key[2] : n;
-    }
-
-    sg.dom.getID = function(id) {
-        return document.getElementById(id);
-    }
-
-    sg.dom.find = function(element, tagName) {
-        for(tagName = tagName.toUpperCase(); (element = element.parentNode) && 1 == element.nodeType;) {
-            if(element.tagName === tagName) {
-                return element;
-            }
-        }
-        return n;
-    }
-
-
-    sg.log = function(a, callback) {
-        // 当浏览器回收内存的时候这个请求是发不出去的，
-        var img = new Image(),
-            d = "memory_log_" + Math.floor(1024 * 1024 * Math.random()).toString(36);
-
-        window[d] = img;
         img.onload = img.onerror = img.onabort = function() {
-            img.onload = img.onerror = img.onabort = n;
-            img = window.d = n;
-            callback && callback(a);
-        }
-        img.src = a;
-    }
+            img.onload = img.onerror = img.onabort = null;
+            img = window.d = null;
 
-    (function() {
-        var g;
-        function a() {
-            console.log('handler');
-        }
-
-        document.addEventListener ? g = function() {
-            document.removeEventListener("DOMContentLoaded", g, f);
-            a()
-        } : document.attachEvent && (g = function() {
-            "complete" === document.readyState && (document.detachEvent("onreadystatechange", g), a())
-        });
-
-        if(document.addEventListener) {
-            document.addEventListener("DOMContentLoaded", g, f);
-            window.addEventListener('load', a, f);
-        }else if(document.attachEvent) {
-            document.attachEvent('onreadystatechange', g);
-            window.attachEvent('onload', a);
-        }
-    })();
-
-
-    // 数据处理
-    (function() {
-
-    })();
+            callback && callback(src);
+        };
+        img.src = src;
+    };
 })(window);
