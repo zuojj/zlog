@@ -12,7 +12,7 @@ A front-end log and exception statistical system
 
 ### window.onerror
 ```js
-window.onerror = ZLog.error;
+window.onerror = window.ZLog.error.bind(window.ZLog);
 ```
 
 ### img.onerror / script.onerror

@@ -21,7 +21,7 @@
  *
  * eg2: window.onerror
  * ```
- * window.onerror = ZLog.error;
+ * window.onerror = window.ZLog.error.bind(window.ZLog);
  * ```
  *
  * eg3: callback inner
@@ -84,13 +84,16 @@
         }
 
         return msg.join(',');
-    };
+    }
+
+
 
     zlog = window['ZLog'] = window['ZLog'] || {};
 
     zlog.version = '0.0.2';
     zlog.options = {
-        url: 'http://www.sogou.com/a.gif'
+        url: 'https://pb.sogou.com/pv.gif',
+        debug: false
     };
 
     /**
@@ -103,7 +106,8 @@
      * @return {Undefined}     [description]
      */
     zlog.error = function(msg, url, line, column, error) {
-        var info = {};
+        var me = this,
+            info = {};
 
         // element.onerror = function(event) {}
         error = error || msg;
@@ -115,7 +119,9 @@
         info.l = (line || error.lineNumber || 0).toString();
         info.c = column || error.columnNumber || (window.event && window.event.errorCharacter) || 0;
 
-        zlog.send(info);
+        me.send(info);
+
+        return me.options.debug;
     };
 
     /**
@@ -126,7 +132,8 @@
      * @return {[type]}           [description]
      */
     zlog.send = function(url, errorInfo, sampling) {
-        var params = [],
+        var me = this,
+            params = [],
             rand_reporter = function(rand) {
                 return Math.random() <= rand;
             };
@@ -134,7 +141,7 @@
         if('object' === typeof url) {
             sampling = errorInfo;
             errorInfo = url;
-            url = zlog.options.url;
+            url = me.options.url;
         }
 
         errorInfo = 'object' === typeof errorInfo ? errorInfo : {};
@@ -143,7 +150,7 @@
                 params.push(key + '=' + window.encodeURIComponent(errorInfo[key]));
             }
         }
-        params.push('rand=' + (+new Date()) + '.r' + Math.floor(Math.random() * 1000));
+        params.push('rand=' + me.getRand());
 
         /**
          * http://www.sogou.com/pv.gif
@@ -159,7 +166,7 @@
          */
         url = /\?.+[^&]$/.test(url) ? (url + '&') : url;
 
-        params.length && rand_reporter(sampling || 1) && zlog.reporter(url + params.join('&'));
+        params.length && rand_reporter(sampling || 1) && me.reporter(url + params.join('&'));
     };
 
     /**
@@ -169,7 +176,8 @@
      * @return {[type]}            [description]
      */
     zlog.reporter = function(src, callback) {
-        var d = "memory_log_" + Math.floor(1024 * 1024 * 1024 * Math.random()).toString(36),
+        var me = this,
+            d = "memory_log_" + me.getRand(),
             img = window[d] = new Image();
 
         img.onload = img.onerror = img.onabort = function() {
@@ -180,4 +188,14 @@
         };
         img.src = src;
     };
+
+    /**
+     * [makeRand 返回随机数，精确到ms级]
+     * @return {String} [随机字符串]
+     */
+    zlog.getRand = function() {
+        return (+new Date()) + '.r' + Math.floor(Math.random() * 1000);
+    }
+
+    window.onerror = window.ZLog.error.bind(window.ZLog);
 })(window);
