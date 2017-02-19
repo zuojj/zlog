@@ -3,6 +3,6 @@ btn.onclick = function() {
     try {
         ver aaa;
     } catch(e) {
-        ZLog.log(e);
+        ZLoger.log(e);
     }
 }

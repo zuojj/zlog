@@ -1,4 +1,4 @@
-# ZLog
+# ZLoger
 
 [![Latest NPM release][npm-badge]][npm-badge-url]
 [![TravisCI Build Status][travis-badge]][travis-badge-url]
@@ -7,19 +7,19 @@
 
 [npm-badge]: https://img.shields.io/npm/v/zloger.svg
 [npm-badge-url]: https://www.npmjs.com/package/zloger
-[travis-badge]: https://img.shields.io/travis/zuojj/zlog/master.svg?label=TravisCI
-[travis-badge-url]: https://travis-ci.org/zuojj/zlog
-[coveralls-badge]: https://img.shields.io/coveralls/zuojj/zlog/master.svg
-[coveralls-badge-url]: https://coveralls.io/github/zuojj/zlog
-[codeclimate-badge]: https://img.shields.io/codeclimate/github/zuojj/zlog.svg
-[codeclimate-badge-url]: https://codeclimate.com/github/zuojj/zlog
+[travis-badge]: https://img.shields.io/travis/zuojj/zloger/master.svg?label=TravisCI
+[travis-badge-url]: https://travis-ci.org/zuojj/zloger
+[coveralls-badge]: https://img.shields.io/coveralls/zuojj/zloger/master.svg
+[coveralls-badge-url]: https://coveralls.io/github/zuojj/zloger
+[codeclimate-badge]: https://img.shields.io/codeclimate/github/zuojj/zloger.svg
+[codeclimate-badge-url]: https://codeclimate.com/github/zuojj/zloger
 
 A front-end log and exception statistical system
 
 ## REFERENCE
 ```js
 <head>
-    <script src="zlog.js"></script>
+    <script src="zloger.js"></script>
 </head>
 ```
 
@@ -27,31 +27,31 @@ A front-end log and exception statistical system
 
 ### window.onerror
 ```js
-window.onerror = window.ZLog.error.bind(window.ZLog);
+window.onerror = window.ZLoger.error.bind(window.ZLoger);
 ```
 
 ### img.onerror / script.onerror
 ```html
-<img src="error.png" onerror="ZLog.error(event)">
+<img src="error.png" onerror="ZLoger.error(event)">
 or
-imgObj.addEventListener('error', ZLog.error, false);
-imgObj.attachEvent('onerror', ZLog.error);
+imgObj.addEventListener('error', ZLoger.error, false);
+imgObj.attachEvent('onerror', ZLoger.error);
 ```
 
 ### directly use send
 ```
-ZLog.send('http://aa.xx.com/pv.gif?', {
+ZLoger.send('http://aa.xx.com/pv.gif?', {
     ip: '10.1.1.1'
 }, 1);
 or
-ZLog.send('http://aa.xx.com/pv.gif?name=benjamin', {
+ZLoger.send('http://aa.xx.com/pv.gif?name=benjamin', {
     ip: '10.1.1.1'
 }, 0.3);
 ```
 
 ### directly use reporter
 ```js
-ZLog.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
+ZLoger.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
     console.log(url);
 });
 ```

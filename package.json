@@ -2,7 +2,7 @@
   "name": "zloger",
   "version": "0.0.3",
   "description": "A front-end log and exception statistical system",
-  "main": "zlog.js",
+  "main": "zloger.js",
   "directories": {
     "example": "example"
   },
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zuojj/zlog.git"
+    "url": "git+https://github.com/zuojj/zloger.git"
   },
   "keywords": [
-    "zlog",
+    "zloger",
     "log"
   ],
   "author": "zuojj",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zuojj/zlog/issues"
+    "url": "https://github.com/zuojj/zloger/issues"
   },
-  "homepage": "https://github.com/zuojj/zlog#readme"
+  "homepage": "https://github.com/zuojj/zloger#readme"
 }

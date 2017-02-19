@@ -15,13 +15,13 @@
  * @example
  * eg1: image or script load error
  * ```
- * <img src="./aa.png" onerror="ZLog.error(event)" />
- * <script src="./test.js" onerror="ZLog.error(event)"><\/script>
+ * <img src="./aa.png" onerror="ZLoger.error(event)" />
+ * <script src="./test.js" onerror="ZLoger.error(event)"><\/script>
  * ```
  *
  * eg2: window.onerror
  * ```
- * window.onerror = window.ZLog.error.bind(window.ZLog);
+ * window.onerror = window.ZLoger.error.bind(window.ZLoger);
  * ```
  *
  * eg3: callback inner
@@ -31,7 +31,7 @@
  *     try {
  *         // todo
  *     } catch(e) {
- *         ZLog.error(e);
+ *         ZLoger.error(e);
  *     }
  * }
  * ```
@@ -45,25 +45,25 @@
  * ```
  *
  * eg5: url have no params
- * ZLog.send('https://www.sogou.com/pv.gif, {
+ * ZLoger.send('https://www.sogou.com/pv.gif, {
  *     type: 'WARN',
  *     msg: 'VALID_IS_NOT_DEFINED'
  * })
  *
  * eg6:
- * ZLog.send({
+ * ZLoger.send({
  *     type: 'WARN',
  *     msg: 'VALID_IS_NOT_DEFINED'
  * }, 0.5)
  *
  * eg7:
- * ZLog.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
+ * ZLoger.reporter('https://www.xxx.com/pv.gif?a=c&ip=10.10.1.2', function(url) {
  *     console.log(url);
  * });
  */
 
 (function(window, undefined) {
-    var zlog;
+    var zloger;
 
     /**
      * [getStack 读取堆栈信息, 默认3层]
@@ -88,10 +88,10 @@
 
 
 
-    zlog = window['ZLog'] = window['ZLog'] || {};
+    zloger = window['ZLoger'] = window['ZLoger'] || {};
 
-    zlog.version = '0.0.2';
-    zlog.options = {
+    zloger.version = '0.0.2';
+    zloger.options = {
         url: 'https://pb.sogou.com/pv.gif',
         debug: false
     };
@@ -105,7 +105,7 @@
      * @param  {Object} error  [错误详细信息]
      * @return {Undefined}     [description]
      */
-    zlog.error = function(msg, url, line, column, error) {
+    zloger.error = function(msg, url, line, column, error) {
         var me = this,
             info = {};
 
@@ -131,7 +131,7 @@
      * @param  {Number} sampling  [采样概率]
      * @return {[type]}           [description]
      */
-    zlog.send = function(url, errorInfo, sampling) {
+    zloger.send = function(url, errorInfo, sampling) {
         var me = this,
             params = [],
             rand_reporter = function(rand) {
@@ -175,7 +175,7 @@
      * @param  {Function} callback [上报回调]
      * @return {[type]}            [description]
      */
-    zlog.reporter = function(src, callback) {
+    zloger.reporter = function(src, callback) {
         var me = this,
             d = "memory_log_" + me.getRand(),
             img = window[d] = new Image();
@@ -193,9 +193,9 @@
      * [makeRand 返回随机数，精确到ms级]
      * @return {String} [随机字符串]
      */
-    zlog.getRand = function() {
+    zloger.getRand = function() {
         return (+new Date()) + '.r' + Math.floor(Math.random() * 1000);
     }
 
-    window.onerror = window.ZLog.error.bind(window.ZLog);
+    window.onerror = window.ZLoger.error.bind(window.ZLoger);
 })(window);
