@@ -1,6 +1,6 @@
 {
-  "name": "zlog",
-  "version": "0.0.2",
+  "name": "zloger",
+  "version": "0.0.3",
   "description": "A front-end log and exception statistical system",
   "main": "zlog.js",
   "directories": {
