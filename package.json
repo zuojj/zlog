@@ -1,0 +1,26 @@
+{
+  "name": "zlog",
+  "version": "0.0.1",
+  "description": "A front-end log and exception statistical system",
+  "main": "zlog.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zuojj/zlog.git"
+  },
+  "keywords": [
+    "zlog",
+    "log"
+  ],
+  "author": "zuojj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zuojj/zlog/issues"
+  },
+  "homepage": "https://github.com/zuojj/zlog#readme"
+}
