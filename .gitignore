@@ -1,0 +1,8 @@
+
+gs
+logs
+*.log
+
+.DS_Store
+build/Release
+
