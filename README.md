@@ -1,4 +1,10 @@
 # ZLog
+
+[![Latest NPM release][npm-badge]][npm-badge-url]
+[![TravisCI Build Status][travis-badge]][travis-badge-url]
+[![Test Coverage][coveralls-badge]][coveralls-badge-url]
+[![Code Climate][codeclimate-badge]][codeclimate-badge-url]
+
 A front-end log and exception statistical system
 
 ## REFERENCE
