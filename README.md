@@ -5,6 +5,15 @@
 [![Test Coverage][coveralls-badge]][coveralls-badge-url]
 [![Code Climate][codeclimate-badge]][codeclimate-badge-url]
 
+[npm-badge]: https://img.shields.io/npm/v/zloges.svg
+[npm-badge-url]: https://www.npmjs.com/package/zloges
+[travis-badge]: https://img.shields.io/travis/zuojj/zlog/master.svg?label=TravisCI
+[travis-badge-url]: https://travis-ci.org/zuojj/zlog
+[coveralls-badge]: https://img.shields.io/coveralls/zuojj/zlog/master.svg
+[coveralls-badge-url]: https://coveralls.io/github/zuojj/zlog
+[codeclimate-badge]: https://img.shields.io/codeclimate/github/zuojj/zlog.svg
+[codeclimate-badge-url]: https://codeclimate.com/github/zuojj/zlog
+
 A front-end log and exception statistical system
 
 ## REFERENCE
